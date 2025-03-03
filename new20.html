@@ -21,7 +21,7 @@
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
-            padding-top: 60px; /* Space for fixed header on mobile */
+            padding-top: 70px; /* Space for fixed header */
         }
 
         /* Binary Blocks (Bidirectional Movement) */
@@ -52,7 +52,7 @@
             100% { transform: translateX(var(--endX)); }
         }
 
-        /* Binary Rain (Same Speed, Random Vertical Start) */
+        /* Binary Rain (Reduced on Mobile) */
         .binary-rain {
             position: fixed;
             top: 0;
@@ -89,7 +89,7 @@
             opacity: 0.15;
         }
 
-        /* Header with Hamburger Menu */
+        /* Header with Hamburger on Extreme Right */
         header {
             position: fixed;
             top: 0;
@@ -97,7 +97,8 @@
             background: rgba(10, 10, 20, 0.95);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            padding: 1rem 0;
+            padding: 0.5rem 0;
+            height: 70px; /* Fixed height */
         }
 
         .header-container {
@@ -106,12 +107,18 @@
             padding: 0 1rem;
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Logo on left, hamburger on right */
+            height: 100%;
+            gap: 20px; /* Fixed gap between logo and hamburger */
         }
 
         .logo {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.8rem;
-            color: #66cc99;
+            color: #00b7eb; /* Cyan color from image */
+            background: linear-gradient(to right, #1a2a44, #2e4057); /* Dark gradient from image */
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
             transition: transform 0.3s ease;
         }
 
@@ -120,54 +127,48 @@
         }
 
         .hamburger {
-            display: none;
             font-size: 1.5rem;
             color: #66cc99;
             cursor: pointer;
             transition: transform 0.3s ease;
-            position: absolute;
-            left: 1rem;
+            position: static; /* Integrate into flex layout */
         }
 
         .hamburger:hover {
             transform: scale(1.1);
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        nav ul li a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: #66cc99;
-        }
-
-        /* Toggle Menu */
+        /* Toggle Menu with Sections (Sliding from Right) */
         .menu-toggle {
-            display: none;
+            display: block;
             position: fixed;
             top: 0;
-            left: -250px; /* Off-screen by default */
+            right: -250px; /* Off-screen by default */
             width: 250px;
             height: 100%;
             background: rgba(10, 10, 20, 0.95);
             padding: 2rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1001;
-            transition: left 0.3s ease;
+            transition: right 0.3s ease;
         }
 
         .menu-toggle.active {
-            left: 0; /* Slide in from left */
+            right: 0; /* Slide in from right */
+        }
+
+        .menu-toggle .close-btn {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            cursor: pointer;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .menu-toggle .close-btn:hover {
+            color: #ff3399;
         }
 
         .menu-toggle ul {
@@ -175,6 +176,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            margin-top: 2rem; /* Space for close button */
         }
 
         .menu-toggle ul li a {
@@ -471,19 +473,17 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive Design with Device Detection */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body { padding-top: 60px; } /* Ensure space for header */
+            body { padding-top: 70px; }
             #hero h1 { font-size: 1.8rem; }
             .section h2 { font-size: 1.6rem; }
             .btn { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
             .project-grid, .skills, .cert-grid { grid-template-columns: 1fr; }
-            nav ul { display: none; }
-            .hamburger { display: block; }
-            .menu-toggle { display: block; }
-            .header-container { flex-direction: column; text-align: center; }
+            .header-container { text-align: center; }
             .hero-content { padding: 1rem; max-width: 90%; margin: 0 auto; }
-            .section { padding: 1.5rem 0.5rem; margin-top: 60px; } /* Prevent overlap */
+            .section { padding: 1.5rem 0.5rem; margin-top: 70px; }
+            .binary-rain span { font-size: 0.8rem; }
         }
 
         @media (max-width: 480px) {
@@ -493,6 +493,7 @@
             .project-card, .skill-card, .cert-card { padding: 1rem; }
             #contact form { max-width: 100%; padding: 1rem; }
             .menu-toggle { width: 200px; }
+            .binary-density { binaryDensity = 80; }
         }
     </style>
 </head>
@@ -504,17 +505,8 @@
         <div class="header-container">
             <div class="logo">Abhishek Diwate</div>
             <i class="fas fa-bars hamburger" id="hamburger"></i>
-            <nav>
-                <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#certifications">Certifications</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
             <div class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-times close-btn" id="close-btn"></i>
                 <ul>
                     <li><a href="#hero">Home</a></li>
                     <li><a href="#about">About</a></li>
@@ -651,9 +643,9 @@
         initBinaryBlocks();
         setInterval(createBinaryBlock, 600); // Farther spacing
 
-        // Binary Rain (Same Speed, Random Vertical Start)
+        // Binary Rain (Reduced on Mobile)
         const binaryRain = document.getElementById('binary-rain');
-        const binaryDensity = 150; // Increased for more rain
+        let binaryDensity = 150; // Default density
 
         function createBinary() {
             const span = document.createElement('span');
@@ -661,12 +653,11 @@
             const xPos = Math.random() * 100;
             const densityFactor = xPos / 100; // 0 (left) to 1 (right)
             span.style.left = `${xPos}vw`;
-            // Random vertical start position between -100vh and 0
             const startY = Math.random() * (-100) + 'vh'; // Random start from above to top
             span.style.setProperty('--startY', startY);
             const duration = 3 + (1 - densityFactor) * 4; // Same speed: 3s (right) to 7s (left)
             span.style.animationDuration = `${duration}s`;
-            if (Math.random() < densityFactor * 2.5) { // Higher chance on right, more crowded
+            if (Math.random() < densityFactor * 2.5) { // Higher chance on right
                 binaryRain.appendChild(span);
                 setTimeout(() => span.remove(), duration * 1000);
             }
@@ -677,7 +668,20 @@
                 createBinary(); // Immediate start
             }
         }
-        initBinaryRain();
+
+        function adjustBinaryDensity() {
+            if (window.innerWidth <= 768) {
+                binaryDensity = 80; // Reduced density on mobile
+            } else {
+                binaryDensity = 150; // Default density on desktop
+            }
+            binaryRain.innerHTML = ''; // Clear existing rain
+            initBinaryRain();
+        }
+
+        adjustBinaryDensity(); // Initial adjustment
+        window.addEventListener('resize', adjustBinaryDensity); // Adjust on resize
+        window.addEventListener('load', adjustBinaryDensity); // Adjust on load
         setInterval(createBinary, 50); // More frequent spawning
 
         window.addEventListener('scroll', () => {
@@ -688,7 +692,7 @@
         const canvas = document.getElementById('neural-canvas');
         const ctx = canvas.getContext('2d');
         let nodes = [];
-        const numNodes = 80; // Increased further
+        const numNodes = 80;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -782,16 +786,22 @@
             }
         });
 
-        // Hamburger Menu Toggle
+        // Hamburger Menu Toggle with Close Button
         const hamburger = document.getElementById('hamburger');
         const menuToggle = document.getElementById('menu-toggle');
+        const closeBtn = document.getElementById('close-btn');
 
         hamburger.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            hamburger.classList.toggle('active');
+            menuToggle.classList.add('active');
+            hamburger.classList.add('active');
         });
 
-        // Smooth Scrolling
+        closeBtn.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+
+        // Smooth Scrolling and Auto-Close on Mobile
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
                 e.preventDefault();
